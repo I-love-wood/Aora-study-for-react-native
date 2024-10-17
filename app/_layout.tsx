@@ -7,6 +7,8 @@ import { useEffect } from "react";
 
 import { NativeWindStyleSheet } from "nativewind";
 
+import 'react-native-url-polyfill/auto'
+
 SplashScreen.preventAutoHideAsync()
 
 const AppLayout = () =>{
