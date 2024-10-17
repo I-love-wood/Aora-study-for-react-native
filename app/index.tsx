@@ -44,7 +44,7 @@ export default function App() {
             title="Continue with Email"
             handelPress = {() => {
               console.log('Continue with Email')
-              router.replace('/sign-in' as Href)
+              router.push('/(auth)/sign-in')
             }}
             containerStyles="w-full mt-7"
           />
