@@ -1,49 +1,48 @@
-/**引入导航的主题和用于处理它们的提供程序 */
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-/**引入加载自定义字体的钩子 */
-import { useFonts } from 'expo-font';
-/**引入栈导航 */
-import { Stack } from 'expo-router';
-/**引入启动屏幕模块 */
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-/**引入 React Native 重动画库 */
-import 'react-native-reanimated';
-/**引入自定义钩子以检测颜色方案（暗模式或亮模式）。 */
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { StyleSheet, Text, View } from "react-native";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-// 防止初始屏幕在加载完成之前自动隐藏
-SplashScreen.preventAutoHideAsync();
+import { Slot, SplashScreen, Stack} from 'expo-router'
 
-export default function RootLayout() {
-  /**使用 useColorScheme 钩子来确定用户偏好暗模式还是亮模式 */
-  const colorScheme = useColorScheme();
-  /**加载自定义字体并将状态赋值给 loaded */
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+import { useFonts } from "expo-font";
+import { useEffect } from "react";
+
+import { NativeWindStyleSheet } from "nativewind";
+
+SplashScreen.preventAutoHideAsync()
+
+const AppLayout = () =>{
+  NativeWindStyleSheet.setOutput({
+    default: "native",
   });
-  /**使用 useEffect 在字体加载完成后隐藏启动屏幕 */
+  /**加载各种字体 */
+  const [fontsLoaded, error] = useFonts({
+    "Poppins-Black": require("@/assets/fonts/Poppins-Black.ttf"),
+    "Poppins-Bold": require("@/assets/fonts/Poppins-Bold.ttf"),
+    "Poppins-ExtraBold": require("@/assets/fonts/Poppins-ExtraBold.ttf"),
+    "Poppins-ExtraLight": require("@/assets/fonts/Poppins-ExtraLight.ttf"),
+    "Poppins-Light": require("@/assets/fonts/Poppins-Light.ttf"),
+    "Poppins-Medium": require("@/assets/fonts/Poppins-Medium.ttf"),
+    "Poppins-Regular": require("@/assets/fonts/Poppins-Regular.ttf"),
+    "Poppins-SemiBold": require("@/assets/fonts/Poppins-SemiBold.ttf"),
+    "Poppins-Thin": require("@/assets/fonts/Poppins-Thin.ttf"),
+  });
+  
   useEffect(() => {
-    if (loaded) {
+    if (error) throw error;
+  
+    if (fontsLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
-
-  if (!loaded) {
+  }, [fontsLoaded, error]);
+  
+  if (!fontsLoaded && !error) {
     return null;
   }
-  /** Stack 组件包含多个 Stack.Screen 子组件，每个子组件定义一个页面
-   * name：页面的名称，作为导航的标识。
-   * component：要渲染的 React 组件，也就是页面内容。
-   * options 用于自定义每个页面的标题、样式等,设置 headerShown 为 false，隐藏页面的头部。
-   */
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
-  );
+
+  return(
+    <Stack>
+      <Stack.Screen name="index" options={{headerShown:false}} />
+    </Stack>
+  )
 }
+
+export default AppLayout;
