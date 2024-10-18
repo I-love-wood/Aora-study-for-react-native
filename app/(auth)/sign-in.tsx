@@ -6,7 +6,9 @@ import { images } from '@/constants'
 import FormField from '@/components/FormField'
 import CustomButton from '@/components/CustomButton'
 import { Link, router } from 'expo-router'
-import { createUser, signIn } from '@/lib/appwrite'
+import { createUser, getCurrentUser, signIn } from '@/lib/appwrite'
+
+import { useGlobalContext } from "@/context/GlobalProvider"
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -14,6 +16,8 @@ const SignIn = () => {
     password:''
   })
 
+  const { setUser, setIsLoggedIn } = useGlobalContext()
+  
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const submit = async ()=>{
@@ -21,9 +25,15 @@ const SignIn = () => {
       Alert.alert('Error','Please fill in all the fields')
     }
     setIsSubmitting(true)
+    console.log(form.password)
     try {
       await signIn(form.email, form.password)
+      const result = await getCurrentUser();
+      setUser(result);
+      setIsLoggedIn(true)
 
+
+      Alert.alert('success', "User signed in successfully")
       router.replace('/(tabs)/home')
     } catch (error) {
       Alert.alert('Error')
@@ -61,7 +71,7 @@ const SignIn = () => {
 
           <CustomButton 
             title="Sign in Aora"
-            handelPress={()=>{submit}}
+            handelPress={submit}
             containerStyles="mt-7"
             isLoading={isSubmitting}
           />

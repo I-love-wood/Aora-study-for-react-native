@@ -9,12 +9,16 @@ import { Link, router } from 'expo-router'
 
 import { createUser } from '@/lib/appwrite'
 
+import { useGlobalContext } from "@/context/GlobalProvider"
+
 const SignUp = () => {
   const [form, setForm] = useState({
     username:'',
     email:'',
     password:''
   })
+
+  const { setUser, setIsLoggedIn } = useGlobalContext()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -25,6 +29,8 @@ const SignUp = () => {
     setIsSubmitting(true)
     try {
       const result = await createUser(form.email, form.password, form.username)
+      setUser(result);
+      setIsLoggedIn(true)
 
       router.replace('/(tabs)/home')
     } catch (error) {
@@ -70,7 +76,7 @@ const SignUp = () => {
 
           <CustomButton 
             title="Sign up Aora"
-            handelPress={()=>{submit}}
+            handelPress={submit}
             containerStyles="mt-7"
             isLoading={isSubmitting}
           />
