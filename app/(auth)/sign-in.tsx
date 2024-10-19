@@ -6,7 +6,7 @@ import { images } from '@/constants'
 import FormField from '@/components/FormField'
 import CustomButton from '@/components/CustomButton'
 import { Link, router } from 'expo-router'
-import { createUser, getCurrentUser, signIn } from '@/lib/appwrite'
+import { getCurrentUser, signIn } from '@/lib/appwrite'
 
 import { useGlobalContext } from "@/context/GlobalProvider"
 
@@ -17,7 +17,7 @@ const SignIn = () => {
   })
 
   const { setUser, setIsLoggedIn } = useGlobalContext()
-  
+  /** 是否提交成功 */
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const submit = async ()=>{
@@ -57,7 +57,7 @@ const SignIn = () => {
           <FormField 
             title="email"
             value={form.email}
-            handleChangeText={(e:any)=>setForm({ ...form, email:e })}
+            handleChangeText={(e:string)=>setForm({ ...form, email:e })}
             otherStyles="mt-7"
             keyboardType="email-address"
           />
@@ -65,7 +65,7 @@ const SignIn = () => {
           <FormField 
             title="password"
             value={form.password}
-            handleChangeText={(e:any)=>setForm({ ...form, password:e })}
+            handleChangeText={(e:string)=>setForm({ ...form, password:e })}
             otherStyles="mt-7"
           />
 

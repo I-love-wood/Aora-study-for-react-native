@@ -1,6 +1,6 @@
-import { Text, View, StyleSheet, ScrollView, Image } from "react-native"
+import { Text, View, ScrollView, Image } from "react-native"
 import { StatusBar } from "expo-status-bar"
-import { Href, Redirect, router } from "expo-router"
+import { Redirect, router } from "expo-router"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 import { images } from "@/constants"
@@ -9,10 +9,11 @@ import { useGlobalContext } from "@/context/GlobalProvider"
 
 export default function App() {
   const { isLoading, isLoggedIn } = useGlobalContext();
-  console.log(isLoading, 'isLoading')
-  console.log(isLoggedIn, 'isLoggedIn')
+  // 如果不在加载状态和已经登录，那么直接跳转首页
   if(!isLoading && isLoggedIn) return <Redirect href="/(tabs)/home"/>
-
+  // 安全区域是指在设备上显示内容时，需要避免的区域，以免内容被设备的物理特性（如刘海、圆角、传感器等）遮挡
+  // SafeAreaView 确保在所有设备上（包括有刘海屏和圆角屏的设备）内容的可见性和可访问性。
+  // 提供了一个简单的方法来处理不同设备的安全区域。
   return(
     <SafeAreaView className="bg-primary h-full">
       <ScrollView contentContainerStyle={{height:'100%'}}>
@@ -49,8 +50,7 @@ export default function App() {
           <CustomButton
             title="Continue with Email"
             handelPress = {() => {
-              console.log('Continue with Email')
-              router.push('/(auth)/sign-in')
+              router.replace('/(auth)/sign-in')
             }}
             containerStyles="w-full mt-7"
           />

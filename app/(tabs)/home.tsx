@@ -1,19 +1,25 @@
-import { View, Text, FlatList, Image, RefreshControl, Alert } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, FlatList, Image, RefreshControl } from 'react-native'
+import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { images } from '@/constants'
 import SearchInput from '@/components/SearchInput'
 import Trending from '@/components/Trending'
 import EmptyState from '@/components/EmptyState'
-import { getAllPosts } from '@/lib/appwrite'
+import { getAllPosts, getLatestPosts } from '@/lib/appwrite'
 import useAppwrite from '@/lib/useAppwrite'
 import VideoCard from '@/components/VideoCard'
+import { useLocalSearchParams } from 'expo-router'
+
+import { useGlobalContext } from '@/context/GlobalProvider'
 
 const Home = () => {
+  const { user, setUser, setIsLoggedIn } = useGlobalContext()
+  // useLocalSearchParams():用于获取当前页面 URL 的查询参数
+  // 例如，如果 URL 是 example.com/search?query=react，那么 useLocalSearchParams 会返回一个对象，其中包含 query 键，值为 react
+  const {query} = useLocalSearchParams()
   const {data:posts, refetch} = useAppwrite(getAllPosts);
-
-  console.log(posts)
+  const {data:latestPosts} = useAppwrite(getLatestPosts);
 
   const [refreshing, setRefreshing] = useState(false)
 
@@ -37,10 +43,10 @@ const Home = () => {
             <View className='justify-between items-start flex-row mb-6'>
               <View>
                 <Text className='font-pmedium text-sm text-gray-100'>
-                  Welcome Back
+                  Welcome Back,
                 </Text>
                 <Text className='text-2xl font-psemibold text-white'>
-                  JSMastery
+                  {user.username}
                 </Text>
               </View>
               <View>
@@ -52,14 +58,14 @@ const Home = () => {
               </View>
             </View>
 
-            <SearchInput />
+            <SearchInput initialQuery={query} />
 
             <View className='w-full flex-1 pt-5 pb-8'>
               <Text className='text-gray-100 text-lg font-pregular mb-3'>
                 Latest Videos
               </Text>
 
-              <Trending posts={posts ?? []} />
+              <Trending posts={latestPosts ?? []} />
             </View>
           </View>
         )}

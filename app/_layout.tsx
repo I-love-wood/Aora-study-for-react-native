@@ -1,6 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
-
-import { Slot, SplashScreen, Stack} from 'expo-router'
+import { SplashScreen, Stack} from 'expo-router'
 
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
@@ -29,7 +27,9 @@ const AppLayout = () =>{
     "Poppins-SemiBold": require("@/assets/fonts/Poppins-SemiBold.ttf"),
     "Poppins-Thin": require("@/assets/fonts/Poppins-Thin.ttf"),
   });
-  
+  // useEffect用于在组件渲染后执行副作用（side effects）
+  // 可选的依赖数组决定了副作用函数何时运行。如果数组为空，副作用只会在挂载和卸载时执行。
+  // 如果依赖数组包含某些变量，当这些变量发生变化时，副作用函数会重新运行。
   useEffect(() => {
     if (error) throw error;
   
@@ -48,7 +48,7 @@ const AppLayout = () =>{
         <Stack.Screen name="index" options={{headerShown:false}} />
         <Stack.Screen name="(auth)" options={{headerShown:false}} />
         <Stack.Screen name="(tabs)" options={{headerShown:false}} />
-        {/* <Stack.Screen name="/search/[query]" options={{headerShown:false}} /> */}
+        <Stack.Screen name="/search/[query]" options={{headerShown:false}} />
       </Stack>
     </GlobalProvider>
   )
